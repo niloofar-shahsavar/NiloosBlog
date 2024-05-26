@@ -1,32 +1,38 @@
 import { useEffect, useState, useContext } from "react";
+import { v4 as uuidv4 } from "uuid";
 import Post from "../Components/Post";
 import { UserContext } from "../Components/UserContext";
 
 const LandingPage = () => {
   const { userName } = useContext(UserContext);
-  const [posts, setPosts] = useState(
-    JSON.parse(localStorage.getItem("posts")) || [
-      {
-        title: "Exploring the Wonders of Nature",
-        content:
-          "Nature has an incredible way of inspiring awe and wonder in those who take the time to explore its beauty. From towering mountains to serene lakes, there's always something new to discover.",
-        author: "Emily Brown",
-      },
-      {
-        title: "The Joy of Reading",
-        content:
-          "There's nothing quite like getting lost in a good book. Whether it's fiction or non-fiction, reading allows us to escape into different worlds and gain new perspectives.",
-        author: "Jane Smith",
-      },
-      {
-        title: "Tips for Staying Productive",
-        content:
-          "Staying productive can be a challenge, but with a few simple tips, it's possible to get more done. Setting clear goals, taking regular breaks, and staying organized are key.",
-        author: "Alex Johnson",
-      },
-    ]
-  );
+
+  const initialPosts = JSON.parse(localStorage.getItem("posts")) || [
+    {
+      id: uuidv4(),
+      title: "Exploring the Wonders of Nature",
+      content:
+        "Nature has an incredible way of inspiring awe and wonder in those who take the time to explore its beauty. From towering mountains to serene lakes, there's always something new to discover.",
+      author: "Emily Brown",
+    },
+    {
+      id: uuidv4(),
+      title: "The Joy of Reading",
+      content:
+        "There's nothing quite like getting lost in a good book. Whether it's fiction or non-fiction, reading allows us to escape into different worlds and gain new perspectives.",
+      author: "Jane Smith",
+    },
+    {
+      id: uuidv4(),
+      title: "Tips for Staying Productive",
+      content:
+        "Staying productive can be a challenge, but with a few simple tips, it's possible to get more done. Setting clear goals, taking regular breaks, and staying organized are key.",
+      author: "Alex Johnson",
+    },
+  ];
+
+  const [posts, setPosts] = useState(initialPosts);
   const [newPost, setNewPost] = useState({
+    id: uuidv4(),
     title: "",
     content: "",
     author: userName,
@@ -47,8 +53,8 @@ const LandingPage = () => {
 
   const handleNewPostSubmit = (e) => {
     e.preventDefault();
-    setPosts([...posts, { ...newPost, author: userName }]);
-    setNewPost({ title: "", content: "" });
+    setPosts([...posts, { ...newPost, id: uuidv4(), author: userName }]);
+    setNewPost({ id: uuidv4(), title: "", content: "", author: userName });
   };
 
   const handleEditInitiate = (index) => {
@@ -95,7 +101,8 @@ const LandingPage = () => {
       </div>
       {posts.map((post, index) => (
         <Post
-          key={index}
+          key={post.id}
+          id={post.id}
           index={index}
           title={post.title}
           content={post.content}

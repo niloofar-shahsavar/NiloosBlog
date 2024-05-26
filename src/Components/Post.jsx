@@ -1,7 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../Components/UserContext";
 
 const Post = ({
+  id,
   title,
   content,
   author,
@@ -13,19 +14,38 @@ const Post = ({
   handleEditChange,
   handleEditSave,
 }) => {
-  const [comments, setComments] = useState([]);
+  const commentsKey = `post-${id}-comments`;
+  const lsComments = localStorage.getItem(commentsKey);
+  const [comments, setComments] = useState(
+    lsComments ? JSON.parse(lsComments) : []
+  );
   const [newComment, setNewComment] = useState("");
 
   const { userName } = useContext(UserContext);
 
+  useEffect(() => {
+    localStorage.setItem(commentsKey, JSON.stringify(comments));
+  }, [comments, commentsKey]);
+
   const handleCommentSubmit = (event) => {
     event.preventDefault();
-    setComments([...comments, newComment]);
+    const extendedComments = [
+      ...comments,
+      { text: newComment, author: userName },
+    ];
+    setComments(extendedComments);
     setNewComment("");
   };
 
   const handleCommentDelete = (indexToDelete) => {
-    setComments(comments.filter((_, index) => index !== indexToDelete));
+    if (comments[indexToDelete].author !== userName) {
+      alert("You can only delete your own comments.");
+      return;
+    }
+    const filteredComments = comments.filter(
+      (_, index) => index !== indexToDelete
+    );
+    setComments(filteredComments);
   };
 
   return (
@@ -85,14 +105,16 @@ const Post = ({
           <div className="comments">
             {comments.map((comment, index) => (
               <div key={index}>
-                <p className="comment-input-field">{comment}</p>Author:{" "}
-                {userName}
-                <button
-                  className="delete-comment-button"
-                  onClick={() => handleCommentDelete(index)}
-                >
-                  Delete Comment
-                </button>
+                <p className="comment-input-field">{comment.text}</p>
+                <p>Author: {comment.author}</p>
+                {comment.author === userName && (
+                  <button
+                    className="delete-comment-button"
+                    onClick={() => handleCommentDelete(index)}
+                  >
+                    Delete Comment
+                  </button>
+                )}
               </div>
             ))}
           </div>
