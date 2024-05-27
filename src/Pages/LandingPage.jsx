@@ -6,6 +6,18 @@ import { UserContext } from "../Components/UserContext";
 const LandingPage = () => {
   const { userName } = useContext(UserContext);
 
+  const categories = [
+    "Technology",
+    "Health",
+    "Education",
+    "Finance",
+    "Entertainment",
+    "Sports",
+    "Nature",
+    "Books",
+    "Productivity",
+  ];
+
   const initialPosts = JSON.parse(localStorage.getItem("posts")) || [
     {
       id: uuidv4(),
@@ -89,32 +101,45 @@ const LandingPage = () => {
       <div className="addpost-div">
         <p className="title-add-post">Write your new post here</p>
         <form onSubmit={handleNewPostSubmit}>
-          Choose a category:
-          <input
-            className="post-category-input"
-            type="text"
-            name="category"
-            value={newPost.category}
-            onChange={handleNewPostChange}
-            placeholder="Category"
-          />
-          Choose a title:
-          <input
-            className="post-title-input"
-            type="text"
-            name="title"
-            value={newPost.title}
-            onChange={handleNewPostChange}
-            placeholder="Post title"
-          />
-          Write your post:
-          <textarea
-            className="content-input"
-            name="content"
-            value={newPost.content}
-            onChange={handleNewPostChange}
-            placeholder="Post content"
-          />
+          <label>
+            Choose a category:
+            <select
+              className="post-category-input"
+              name="category"
+              value={newPost.category}
+              onChange={handleNewPostChange}
+            >
+              <option value="" disabled>
+                Select a category
+              </option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Choose a title:
+            <input
+              className="post-title-input"
+              type="text"
+              name="title"
+              value={newPost.title}
+              onChange={handleNewPostChange}
+              placeholder="Post title"
+            />
+          </label>
+          <label>
+            Write your post:
+            <textarea
+              className="content-input"
+              name="content"
+              value={newPost.content}
+              onChange={handleNewPostChange}
+              placeholder="Post content"
+            />
+          </label>
           <button className="add-post-button" type="submit">
             Add Post
           </button>
@@ -136,6 +161,7 @@ const LandingPage = () => {
           postToEdit={postToEdit}
           handleEditChange={handleEditChange}
           handleEditSave={handleEditSave}
+          categories={categories} 
         />
       ))}
     </div>

@@ -14,6 +14,7 @@ const Post = ({
   postToEdit,
   handleEditChange,
   handleEditSave,
+  categories,
 }) => {
   const commentsKey = `post-${id}-comments`;
   const lsComments = localStorage.getItem(commentsKey);
@@ -54,14 +55,22 @@ const Post = ({
       {isEditing ? (
         <form onSubmit={handleEditSave}>
           Category
-          <input
+          <select
             className="category-edit-input"
-            type="text"
             name="category"
             value={postToEdit.category}
             onChange={handleEditChange}
-            placeholder="Category"
-          />
+          >
+            <option value="" disabled>
+              Select a category
+            </option>
+            <option value="Technology">Technology</option>
+            <option value="Health">Health</option>
+            <option value="Education">Education</option>
+            <option value="Finance">Finance</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Sports">Sports</option>
+          </select>
           Title
           <input
             className="title-edit-input"
