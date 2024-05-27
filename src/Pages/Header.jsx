@@ -8,7 +8,7 @@ const Header = (props) => {
   const { userName, isLoggedIn, logout } = useContext(UserContext);
 
   return (
-    <div className="header-container">
+    <div>
       <div className="grid grid-cols-3 mx-2 my-2 lg:mx-14 lg:my-6 items-center text-center">
         <div className="font-bold items-center text-center w-40 h-40">
           <h2>Welcome, {userName ? userName : "please log in"}!</h2>
@@ -22,24 +22,19 @@ const Header = (props) => {
 
         <div>
           {isLoggedIn ? (
-            <button className="login-logout-button" onClick={logout}>
-              Log out
-            </button>
+            <button onClick={logout}>Log out</button>
           ) : (
             <Link to="/login">
-              <button className="login-logout-button">Log in / Register</button>
+              <button>Log in / Register</button>
             </Link>
           )}
         </div>
-
-        <div className="my-header">
-          <div className="header">Welcome to Niloo's Blog</div>
-          <nav className="myNav">
-            <Link to="/login">Home</Link>
-            <Link to="/about">About</Link>
-            <Link to="/contact">Contact us</Link>
-          </nav>
-        </div>
+        <div className="header">Welcome to Niloo's Blog</div>
+        <nav className="my-nav">
+          <Link to="/login">Home</Link>
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact us</Link>
+        </nav>
       </div>
       <hr />
     </div>

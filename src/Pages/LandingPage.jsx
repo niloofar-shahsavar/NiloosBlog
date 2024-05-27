@@ -13,6 +13,7 @@ const LandingPage = () => {
       content:
         "Nature has an incredible way of inspiring awe and wonder in those who take the time to explore its beauty. From towering mountains to serene lakes, there's always something new to discover.",
       author: "Emily Brown",
+      category: "Nature",
     },
     {
       id: uuidv4(),
@@ -20,6 +21,7 @@ const LandingPage = () => {
       content:
         "There's nothing quite like getting lost in a good book. Whether it's fiction or non-fiction, reading allows us to escape into different worlds and gain new perspectives.",
       author: "Jane Smith",
+      category: "Books",
     },
     {
       id: uuidv4(),
@@ -27,6 +29,7 @@ const LandingPage = () => {
       content:
         "Staying productive can be a challenge, but with a few simple tips, it's possible to get more done. Setting clear goals, taking regular breaks, and staying organized are key.",
       author: "Alex Johnson",
+      category: "Productivity",
     },
   ];
 
@@ -36,6 +39,7 @@ const LandingPage = () => {
     title: "",
     content: "",
     author: userName,
+    category: "",
   });
   const [postToEdit, setPostToEdit] = useState(null);
 
@@ -54,7 +58,13 @@ const LandingPage = () => {
   const handleNewPostSubmit = (e) => {
     e.preventDefault();
     setPosts([...posts, { ...newPost, id: uuidv4(), author: userName }]);
-    setNewPost({ id: uuidv4(), title: "", content: "", author: userName });
+    setNewPost({
+      id: uuidv4(),
+      title: "",
+      content: "",
+      author: userName,
+      category: "",
+    });
   };
 
   const handleEditInitiate = (index) => {
@@ -76,9 +86,19 @@ const LandingPage = () => {
 
   return (
     <div className="blog-page">
-      <div className="addPost-div">
+      <div className="addpost-div">
         <p className="title-add-post">Write your new post here</p>
         <form onSubmit={handleNewPostSubmit}>
+          Choose a category:
+          <input
+            className="post-category-input"
+            type="text"
+            name="category"
+            value={newPost.category}
+            onChange={handleNewPostChange}
+            placeholder="Category"
+          />
+          Choose a title:
           <input
             className="post-title-input"
             type="text"
@@ -87,6 +107,7 @@ const LandingPage = () => {
             onChange={handleNewPostChange}
             placeholder="Post title"
           />
+          Write your post:
           <textarea
             className="content-input"
             name="content"
@@ -107,6 +128,7 @@ const LandingPage = () => {
           title={post.title}
           content={post.content}
           author={post.author}
+          category={post.category}
           onDelete={() => handlePostDelete(index)}
           onEditInitiate={() => handleEditInitiate(index)}
           isAuthor={post.author === userName}

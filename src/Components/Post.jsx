@@ -6,6 +6,7 @@ const Post = ({
   title,
   content,
   author,
+  category,
   onDelete,
   onEditInitiate,
   isAuthor,
@@ -52,18 +53,31 @@ const Post = ({
     <div className="post-header">
       {isEditing ? (
         <form onSubmit={handleEditSave}>
+          Category
+          <input
+            className="category-edit-input"
+            type="text"
+            name="category"
+            value={postToEdit.category}
+            onChange={handleEditChange}
+            placeholder="Category"
+          />
+          Title
           <input
             className="title-edit-input"
             type="text"
             name="title"
             value={postToEdit.title}
             onChange={handleEditChange}
+            placeholder="Title"
           />
+          Content
           <textarea
             className="content-edit-input"
             name="content"
             value={postToEdit.content}
             onChange={handleEditChange}
+            placeholder="Content"
           />
           <button className="edit-save-button" type="submit">
             Save
@@ -72,6 +86,7 @@ const Post = ({
       ) : (
         <>
           <div>
+            <p className="post-category">Category: {category}</p>
             <h2 className="post-title">{title}</h2>
             <p className="post-author">Author: {author}</p>
           </div>
@@ -88,21 +103,21 @@ const Post = ({
               </button>
             </>
           )}
-          <div className="comment-input-form-div">
+          <div>
             <form onSubmit={handleCommentSubmit}>
               <input
-                className="comment-input"
+                className="add-comment-input"
                 type="text"
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Write a comment"
               />
-              <button className="comment-button" type="submit">
+              <button className="add-comment-button" type="submit">
                 Submit Your Comment
               </button>
             </form>
           </div>
-          <div className="comments">
+          <div>
             {comments.map((comment, index) => (
               <div key={index}>
                 <p className="comment-input-field">{comment.text}</p>

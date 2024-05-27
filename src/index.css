@@ -29,42 +29,18 @@ a {
   color: rgb(164, 111, 25);
 }
 
-.myImage {
-  width: 100%;
-  height: 100px;
-}
-
 .blog-page {
   display: flex;
   flex-direction: column;
   gap: 5rem;
-
   margin: 100px;
   padding: 100px;
 }
 
-.post-form {
-  display: flex;
-  gap: 1rem;
-  margin: 10px;
-  width: 50%;
-}
-
-.post-input {
+.post-content {
   margin-bottom: 10rem;
   display: flex;
-}
-
-.posts-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.post {
-  margin-bottom: 2rem;
-  color: rgb(37, 63, 148);
-  display: flex;
+  margin-top: 10px;
 }
 
 .post-title {
@@ -73,9 +49,10 @@ a {
   font-size: 36px;
   display: flex;
   height: 100px;
+  padding-top: 20px;
 }
 
-.comment-input {
+.add-comment-input {
   margin-bottom: 1rem;
   margin-top: 2rem;
   width: 50%;
@@ -93,23 +70,16 @@ a {
   border-radius: 10px;
 }
 
-.delete-post-button {
+.delete-post-button,
+.add-post-button,
+.add-comment-button,
+.delete-comment-button,
+.edit-post-button,
+.edit-save-button {
   margin-top: 20px;
   margin-left: 20px;
   border: 3px solid rgb(217, 179, 154);
   font-size: 1rem;
-  font-weight: bold;
-  border-radius: 5px;
-  padding: 10px;
-  color: rgb(87, 59, 9);
-  background-color: antiquewhite;
-}
-
-.add-post-button {
-  margin-top: 20px;
-  margin-left: 20px;
-  border: 3px solid rgb(217, 179, 154);
-  font-size: 1.2rem;
   font-weight: bold;
   border-radius: 5px;
   padding: 10px;
@@ -124,9 +94,11 @@ a {
   background-color: antiquewhite;
   border: 1px solid rgb(41, 36, 34);
   padding-left: 10px;
+  display: block;
 }
 
-.post-title-input {
+.post-title-input,
+.post-category-input {
   width: 40%;
   margin: 10px;
   border-radius: 10px;
@@ -135,34 +107,6 @@ a {
   border: 1px solid rgb(41, 36, 34);
   background-color: antiquewhite;
   padding-left: 10px;
-}
-
-.comment-button {
-  margin-top: 20px;
-  margin-left: 20px;
-  border: 3px solid rgb(217, 179, 154);
-  font-size: 0.75rem;
-  font-weight: bold;
-  border-radius: 5px;
-  padding: 10px;
-  color: rgb(87, 59, 9);
-  background-color: antiquewhite;
-}
-
-.delete-comment-button {
-  margin-top: 20px;
-  margin-left: 20px;
-  border: 3px solid rgb(217, 179, 154);
-  font-size: 0.75rem;
-  font-weight: bold;
-  border-radius: 5px;
-  padding: 10px;
-  color: rgb(87, 59, 9);
-  background-color: antiquewhite;
-}
-
-.comment-input-form-div {
-  margin: 10px;
 }
 
 .comment-input-field {
@@ -175,30 +119,17 @@ a {
   border-radius: 3px;
 }
 
-.myNav {
+.my-nav {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   justify-content: center;
   align-items: center;
 }
 
-.addPost-div {
-  align-items: center;
+.addpost-div {
   border: 2px solid rgb(41, 36, 34);
   padding: 30px;
   border-radius: 10px;
-}
-
-.edit-Button {
-  margin-top: 20px;
-  margin-left: 20px;
-  border: 3px solid rgb(217, 179, 154);
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 5px;
-  padding: 10px;
-  color: rgb(87, 59, 9);
-  background-color: antiquewhite;
 }
 
 .title-add-post {
@@ -208,24 +139,8 @@ a {
   padding-bottom: 20px;
 }
 
-.logIn-Button {
-  border: 1px solid black;
-  padding: 0px 2px 0px 2px;
-  background-color: aqua;
-}
-
-.Username-Input {
-  border: 1px solid black;
-  display: block;
-}
-
-.Password-Input {
-  border: 1px solid black;
-  display: block;
-  margin-bottom: 10px;
-}
-
-.title-edit-input {
+.title-edit-input,
+.category-edit-input {
   border: 1px solid black;
   display: block;
   margin: 20px;
@@ -242,68 +157,33 @@ a {
 }
 
 .content-edit-input {
-  border: 1px solid black;
   display: block;
   margin: 20px;
   border-radius: 5px;
-  margin-top: 20px;
-  margin-left: 20px;
-  border: 3px solid rgb(217, 179, 154);
   font-size: 1rem;
   font-weight: bold;
   border-radius: 5px;
   padding: 10px;
   color: rgb(87, 59, 9);
   background-color: antiquewhite;
-}
-
-.edit-save-button {
-  border: 1px solid black;
-  border-radius: 5px;
-  margin: 20px;
-  margin-top: 20px;
-  margin-left: 20px;
+  width: 80%;
+  height: 400px;
   border: 3px solid rgb(217, 179, 154);
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 5px;
-  padding: 10px;
-  color: rgb(87, 59, 9);
-  background-color: antiquewhite;
 }
 
+.login-button,
+.register-button {
+  background-color: antiquewhite;
+  color: rgb(9, 18, 87);
+  padding: 20px;
+  border-radius: 20px;
+  margin: 10px;
+}
+
+.post-category,
 .post-author {
   font-size: larger;
   margin: 10px 0px 10px 0px;
   font-weight: bold;
-}
-
-.edit-post-button {
-  margin-top: 20px;
-  margin-left: 20px;
-  border: 3px solid rgb(217, 179, 154);
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 5px;
-  padding: 10px;
-  color: rgb(87, 59, 9);
-  background-color: antiquewhite;
-}
-
-.login-button {
-  color: rgb(30, 9, 87);
-  background-color: antiquewhite;
-  color: rgb(9, 18, 87);
-  padding: 20px;
-  border-radius: 20px;
-  margin: 10px;
-}
-
-.register-button {
-  color: rgb(30, 9, 87);
-  background-color: antiquewhite;
-  color: rgb(9, 18, 87);
-  padding: 20px;
-  border-radius: 20px;
-  margin: 10px;
+  display: flex;
 }

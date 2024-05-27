@@ -6,8 +6,8 @@ const PageLayout = ({ title, headline, children }) => {
   }, [title]);
 
   return (
-    <div className="mx-10 my-10">
-      <h1 className="font-bold mb-5">{headline}</h1>
+    <div>
+      <h1>{headline}</h1>
       {children}
     </div>
   );
