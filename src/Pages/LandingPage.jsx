@@ -37,11 +37,35 @@ const LandingPage = () => {
     },
     {
       id: uuidv4(),
-      title: "Tips for Staying Productive",
+      title: "The Future of AI Technology",
       content:
-        "Staying productive can be a challenge, but with a few simple tips, it's possible to get more done. Setting clear goals, taking regular breaks, and staying organized are key.",
-      author: "Alex Johnson",
-      category: "Productivity",
+        "Artificial Intelligence is rapidly advancing, with new applications being developed in various fields. From healthcare to finance, AI has the potential to revolutionize the way we live and work.",
+      author: "David Green",
+      category: "Technology",
+    },
+    {
+      id: uuidv4(),
+      title: "Maintaining a Healthy Lifestyle",
+      content:
+        "Maintaining a healthy lifestyle involves regular exercise, balanced diet, and sufficient sleep. Incorporating these habits into your daily routine can significantly improve your overall well-being.",
+      author: "Sarah Lee",
+      category: "Health",
+    },
+    {
+      id: uuidv4(),
+      title: "Innovative Approaches in Education",
+      content:
+        "Education is evolving with the integration of technology and innovative teaching methods. These changes are making learning more engaging and accessible for students around the world.",
+      author: "Mark Wilson",
+      category: "Education",
+    },
+    {
+      id: uuidv4(),
+      title: "Highlights from the World of Sports",
+      content:
+        "The sports world has seen some incredible moments this year. From record-breaking performances to unforgettable matches, sports fans have had plenty to cheer about.",
+      author: "Chris Thompson",
+      category: "Sports",
     },
   ];
 
@@ -54,10 +78,15 @@ const LandingPage = () => {
     category: "",
   });
   const [postToEdit, setPostToEdit] = useState(null);
+  const [categoryFilter, setCategoryFilter] = useState(localStorage.getItem("categoryFilter") || "");
 
   useEffect(() => {
     localStorage.setItem("posts", JSON.stringify(posts));
   }, [posts]);
+
+  useEffect(() => {
+    localStorage.setItem("categoryFilter", categoryFilter);
+  }, [categoryFilter]);
 
   const handlePostDelete = (indexToDelete) => {
     setPosts(posts.filter((_, index) => index !== indexToDelete));
@@ -96,8 +125,32 @@ const LandingPage = () => {
     setPostToEdit(null);
   };
 
+  const handleCategoryFilterChange = (e) => {
+    setCategoryFilter(e.target.value);
+  };
+
+  const filteredPosts = categoryFilter
+    ? posts.filter((post) => post.category === categoryFilter)
+    : posts;
+
   return (
     <div className="blog-page">
+      <div className="filter-div">
+        <label className="label-filter">
+          Filter by category:
+          <select
+            value={categoryFilter}
+            onChange={handleCategoryFilterChange}
+          >
+            <option value="">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       <div className="addpost-div">
         <p className="title-add-post">Write your new post here</p>
         <form onSubmit={handleNewPostSubmit}>
@@ -145,7 +198,7 @@ const LandingPage = () => {
           </button>
         </form>
       </div>
-      {posts.map((post, index) => (
+      {filteredPosts.map((post, index) => (
         <Post
           key={post.id}
           id={post.id}
@@ -161,7 +214,7 @@ const LandingPage = () => {
           postToEdit={postToEdit}
           handleEditChange={handleEditChange}
           handleEditSave={handleEditSave}
-          categories={categories} 
+          categories={categories}
         />
       ))}
     </div>

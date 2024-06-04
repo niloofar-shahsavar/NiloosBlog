@@ -187,3 +187,19 @@ a {
   font-weight: bold;
   display: flex;
 }
+
+
+.filter-div{
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+}
+
+
+.label-filter{
+  font-size: 1rem;
+  font-weight: bold;
+  margin-right: 10px;
+  
+}
