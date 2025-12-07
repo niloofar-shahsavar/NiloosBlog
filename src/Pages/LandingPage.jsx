@@ -78,7 +78,9 @@ const LandingPage = () => {
     category: "",
   });
   const [postToEdit, setPostToEdit] = useState(null);
-  const [categoryFilter, setCategoryFilter] = useState(localStorage.getItem("categoryFilter") || "");
+  const [categoryFilter, setCategoryFilter] = useState(
+    localStorage.getItem("categoryFilter") || ""
+  );
 
   useEffect(() => {
     localStorage.setItem("posts", JSON.stringify(posts));
@@ -134,37 +136,20 @@ const LandingPage = () => {
     : posts;
 
   return (
-    <div className="blog-page">
-      <div className="filter-div">
-        <label className="label-filter">
-          Filter by category:
-          <select
-            value={categoryFilter}
-            onChange={handleCategoryFilterChange}
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <div className="addpost-div">
-        <p className="title-add-post">Write your new post here</p>
-        <form onSubmit={handleNewPostSubmit}>
-          <label>
-            Choose a category:
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Filter Section */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <label className="flex items-center gap-3">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Filter by category:
+            </span>
             <select
-              className="post-category-input"
-              name="category"
-              value={newPost.category}
-              onChange={handleNewPostChange}
+              value={categoryFilter}
+              onChange={handleCategoryFilterChange}
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white transition-colors"
             >
-              <option value="" disabled>
-                Select a category
-              </option>
+              <option value="">All Categories</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
@@ -172,51 +157,102 @@ const LandingPage = () => {
               ))}
             </select>
           </label>
-          <label>
-            Choose a title:
-            <input
-              className="post-title-input"
-              type="text"
-              name="title"
-              value={newPost.title}
-              onChange={handleNewPostChange}
-              placeholder="Post title"
+        </div>
+
+        {/* Create New Post Section */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            Create New Post
+          </h2>
+          <form onSubmit={handleNewPostSubmit} className="space-y-4">
+            {/* Category Select */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Category
+              </label>
+              <select
+                name="category"
+                value={newPost.category}
+                onChange={handleNewPostChange}
+                required
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white transition-colors"
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Title Input */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Title
+              </label>
+              <input
+                type="text"
+                name="title"
+                value={newPost.title}
+                onChange={handleNewPostChange}
+                required
+                placeholder="Enter your post title"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white transition-colors"
+              />
+            </div>
+
+            {/* Content Textarea */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Content
+              </label>
+              <textarea
+                name="content"
+                value={newPost.content}
+                onChange={handleNewPostChange}
+                required
+                rows="6"
+                placeholder="Write your post content here..."
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white transition-colors resize-none"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full py-3 px-6 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 dark:focus:ring-white transition-colors"
+            >
+              Publish Post
+            </button>
+          </form>
+        </div>
+
+        {/* Posts List */}
+        <div className="space-y-6">
+          {filteredPosts.map((post, index) => (
+            <Post
+              key={post.id}
+              id={post.id}
+              index={index}
+              title={post.title}
+              content={post.content}
+              author={post.author}
+              category={post.category}
+              onDelete={() => handlePostDelete(index)}
+              onEditInitiate={() => handleEditInitiate(index)}
+              isAuthor={post.author === userName}
+              isEditing={postToEdit && postToEdit.index === index}
+              postToEdit={postToEdit}
+              handleEditChange={handleEditChange}
+              handleEditSave={handleEditSave}
+              categories={categories}
             />
-          </label>
-          <label>
-            Write your post:
-            <textarea
-              className="content-input"
-              name="content"
-              value={newPost.content}
-              onChange={handleNewPostChange}
-              placeholder="Post content"
-            />
-          </label>
-          <button className="add-post-button" type="submit">
-            Add Post
-          </button>
-        </form>
+          ))}
+        </div>
       </div>
-      {filteredPosts.map((post, index) => (
-        <Post
-          key={post.id}
-          id={post.id}
-          index={index}
-          title={post.title}
-          content={post.content}
-          author={post.author}
-          category={post.category}
-          onDelete={() => handlePostDelete(index)}
-          onEditInitiate={() => handleEditInitiate(index)}
-          isAuthor={post.author === userName}
-          isEditing={postToEdit && postToEdit.index === index}
-          postToEdit={postToEdit}
-          handleEditChange={handleEditChange}
-          handleEditSave={handleEditSave}
-          categories={categories}
-        />
-      ))}
     </div>
   );
 };

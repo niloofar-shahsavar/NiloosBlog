@@ -7,10 +7,11 @@ import Contact from "./Pages/Contact";
 import LoginPage from "./Pages/LoginPage";
 import { UserProvider } from "./Components/UserContext";
 import PrivateRoutes from "./Components/PrivateRoutes";
-import PageLayout from "./Components/PageLayout";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+
+  console.log("Firebase Project ID:", import.meta.env.VITE_FIREBASE_PROJECT_ID);
 
   const toggleDarkMode = () => {
     setDarkMode((prev) => !prev);

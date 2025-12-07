@@ -4,24 +4,25 @@ import { createUser, signInUser, signOutUser } from "../firebase/authFunction";
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
-  const lsUserName = localStorage.getItem("userName");
+  const lsUserName = localStorage.getItem("userName") || null;
   const [userName, setUserName] = useState(lsUserName);
 
   const lsIsLoggedIn = localStorage.getItem("isLoggedIn");
-  const [isLoggedIn, setIsLoggedIn] = useState(lsIsLoggedIn);
+  const [isLoggedIn, setIsLoggedIn] = useState(lsIsLoggedIn === "true");
 
   const register = async (email, password) => {
     const credential = await createUser(email, password);
-    afterLogin(email, password);
+    afterLogin(credential.user);
   };
 
   const login = async (email, password) => {
     const credential = await signInUser(email, password);
-
-    afterLogin(email, password);
+    afterLogin(credential.user);
   };
 
-  const afterLogin = async (email, password) => {
+  const afterLogin = (user) => {
+    const email = user?.email ?? "unknown user";
+
     setUserName(email);
     localStorage.setItem("userName", email);
 
@@ -33,13 +34,13 @@ export const UserProvider = (props) => {
     await signOutUser();
 
     setIsLoggedIn(false);
-    localStorage.removeItem("isLoggedIn");
+    localStorage.setItem("isLoggedIn", "false");
 
-    setUserName("please log in");
+    setUserName("null");
     localStorage.removeItem("userName");
   };
 
-  const useInApp = {
+  const value = {
     userName,
     setUserName,
     isLoggedIn,
@@ -49,8 +50,6 @@ export const UserProvider = (props) => {
   };
 
   return (
-    <UserContext.Provider value={useInApp}>
-      {props.children}
-    </UserContext.Provider>
+    <UserContext.Provider value={value}>{props.children}</UserContext.Provider>
   );
 };
