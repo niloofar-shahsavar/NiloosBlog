@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../Components/UserContext";
+import { validateComment } from "../utils/sanitize";
 
 const Post = ({
   id,
@@ -15,6 +16,7 @@ const Post = ({
   handleEditChange,
   handleEditSave,
   categories,
+  formErrors = [],
 }) => {
   const commentsKey = `post-${id}-comments`;
   const lsComments = localStorage.getItem(commentsKey);
@@ -23,6 +25,7 @@ const Post = ({
   );
   const [newComment, setNewComment] = useState("");
   const [showComments, setShowComments] = useState(false);
+  const [commentErrors, setCommentErrors] = useState([]);
 
   const { userName } = useContext(UserContext);
 
@@ -32,11 +35,20 @@ const Post = ({
 
   const handleCommentSubmit = (event) => {
     event.preventDefault();
-    if (!newComment.trim()) return;
 
+    // Validate and sanitize comment
+    const validation = validateComment(newComment);
+
+    if (!validation.isValid) {
+      setCommentErrors(validation.errors);
+      return;
+    }
+
+    // Clear errors and add sanitized comment
+    setCommentErrors([]);
     const extendedComments = [
       ...comments,
-      { text: newComment, author: userName },
+      { text: validation.sanitizedText, author: userName },
     ];
     setComments(extendedComments);
     setNewComment("");
@@ -61,6 +73,19 @@ const Post = ({
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Edit Post
           </h3>
+
+          {/* Error Messages */}
+          {formErrors.length > 0 && (
+            <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <ul className="list-disc list-inside space-y-1">
+                {formErrors.map((error, index) => (
+                  <li key={index} className="text-sm text-red-700 dark:text-red-400">
+                    {error}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Category Select */}
           <div>
@@ -197,11 +222,27 @@ const Post = ({
             {/* Comments Content */}
             {showComments && (
               <div className="px-6 pb-6 space-y-4">
+                {/* Comment Error Messages */}
+                {commentErrors.length > 0 && (
+                  <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                    <ul className="list-disc list-inside space-y-1">
+                      {commentErrors.map((error, index) => (
+                        <li key={index} className="text-xs text-red-700 dark:text-red-400">
+                          {error}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 {/* Add Comment Form */}
                 <form onSubmit={handleCommentSubmit} className="space-y-3">
                   <textarea
                     value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
+                    onChange={(e) => {
+                      setCommentErrors([]); // Clear errors when user types
+                      setNewComment(e.target.value);
+                    }}
                     placeholder="Write a comment..."
                     rows="3"
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white transition-colors resize-none"

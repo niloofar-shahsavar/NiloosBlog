@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Post from "../Components/Post";
 import { UserContext } from "../Components/UserContext";
+import { validatePost } from "../utils/sanitize";
 
 const LandingPage = () => {
   const { userName } = useContext(UserContext);
@@ -81,6 +82,7 @@ const LandingPage = () => {
   const [categoryFilter, setCategoryFilter] = useState(
     localStorage.getItem("categoryFilter") || ""
   );
+  const [formErrors, setFormErrors] = useState([]);
 
   useEffect(() => {
     localStorage.setItem("posts", JSON.stringify(posts));
@@ -95,12 +97,31 @@ const LandingPage = () => {
   };
 
   const handleNewPostChange = (e) => {
+    setFormErrors([]); // Clear errors when user types
     setNewPost({ ...newPost, [e.target.name]: e.target.value });
   };
 
   const handleNewPostSubmit = (e) => {
     e.preventDefault();
-    setPosts([...posts, { ...newPost, id: uuidv4(), author: userName }]);
+
+    // Validate and sanitize input
+    const validation = validatePost(newPost);
+
+    if (!validation.isValid) {
+      setFormErrors(validation.errors);
+      return;
+    }
+
+    // Clear errors and create post with sanitized data
+    setFormErrors([]);
+    setPosts([
+      ...posts,
+      {
+        ...validation.sanitizedData,
+        id: uuidv4(),
+        author: userName,
+      },
+    ]);
     setNewPost({
       id: uuidv4(),
       title: "",
@@ -115,13 +136,27 @@ const LandingPage = () => {
   };
 
   const handleEditChange = (e) => {
+    setFormErrors([]); // Clear errors when user types
     setPostToEdit({ ...postToEdit, [e.target.name]: e.target.value });
   };
 
   const handleEditSave = (e) => {
     e.preventDefault();
+
+    // Validate and sanitize input
+    const validation = validatePost(postToEdit);
+
+    if (!validation.isValid) {
+      setFormErrors(validation.errors);
+      return;
+    }
+
+    // Clear errors and update post with sanitized data
+    setFormErrors([]);
     const updatedPosts = posts.map((post, index) =>
-      index === postToEdit.index ? postToEdit : post
+      index === postToEdit.index
+        ? { ...validation.sanitizedData, id: post.id, author: post.author }
+        : post
     );
     setPosts(updatedPosts);
     setPostToEdit(null);
@@ -164,6 +199,20 @@ const LandingPage = () => {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Create New Post
           </h2>
+
+          {/* Error Messages */}
+          {formErrors.length > 0 && (
+            <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <ul className="list-disc list-inside space-y-1">
+                {formErrors.map((error, index) => (
+                  <li key={index} className="text-sm text-red-700 dark:text-red-400">
+                    {error}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <form onSubmit={handleNewPostSubmit} className="space-y-4">
             {/* Category Select */}
             <div>
@@ -249,6 +298,7 @@ const LandingPage = () => {
               handleEditChange={handleEditChange}
               handleEditSave={handleEditSave}
               categories={categories}
+              formErrors={postToEdit && postToEdit.index === index ? formErrors : []}
             />
           ))}
         </div>

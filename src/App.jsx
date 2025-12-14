@@ -11,8 +11,6 @@ import PrivateRoutes from "./Components/PrivateRoutes";
 function App() {
   const [darkMode, setDarkMode] = useState(false);
 
-  console.log("Firebase Project ID:", import.meta.env.VITE_FIREBASE_PROJECT_ID);
-
   const toggleDarkMode = () => {
     setDarkMode((prev) => !prev);
   };
